@@ -256,6 +256,17 @@ public partial class LibraryPageViewModel : ViewModelBase
     [RelayCommand]
     private void ToggleListMediaId() => ShowListMediaId = !ShowListMediaId;
 
+    [ObservableProperty] private bool _showListInstalledContent = false;
+
+    partial void OnShowListInstalledContentChanged(bool value)
+    {
+        _settings.Settings.Ui.Window.Library.ListView.ShowInstalledContent = ShowListInstalledContent;
+        _settings.SaveSettings();
+    }
+
+    [RelayCommand]
+    private void ToggleListInstalledContent() => ShowListInstalledContent = !ShowListInstalledContent;
+
     // Zoom Properties
     [ObservableProperty] private double _zoomValue = 100;
 
@@ -451,6 +462,7 @@ public partial class LibraryPageViewModel : ViewModelBase
         ShowListIcon = librarySettings.ListView.ShowIcon;
         ShowListTitleId = librarySettings.ListView.ShowTitleId;
         ShowListMediaId = librarySettings.ListView.ShowMediaId;
+        ShowListInstalledContent = librarySettings.ListView.ShowInstalledContent;
         ZoomValue = librarySettings.GridView.Zoom * 100; // Convert from 1.0 scale to percentage
         DoubleClickLaunch = librarySettings.GridView.DoubleClickLaunch;
         ViewOption = librarySettings.ViewOption;

@@ -23,6 +23,7 @@ using XeniaManager.Database.Models.Patches;
 using XeniaManager.Files.Models.Account;
 using XeniaManager.Files.Models.Bindings;
 using XeniaManager.Files.Models.Config;
+using XeniaManager.Files.Models.Stfs;
 using XeniaManager.Core.Models.Files.Config;
 using XeniaManager.Core.Models.Game;
 using XeniaManager.Core.Models.Items;
@@ -38,6 +39,8 @@ public partial class GameItemViewModel : ViewModelBase
 {
     [ObservableProperty] private Game _game;
     [ObservableProperty] private bool _isSelected;
+    [ObservableProperty] private string _installedTitleUpdate = string.Empty;
+    [ObservableProperty] private bool _hasInstalledTitleUpdate;
     private readonly LibraryPageViewModel _library;
     private IMessageBoxService _messageBoxService { get; set; }
     private INotificationService _notificationService;
@@ -144,6 +147,49 @@ public partial class GameItemViewModel : ViewModelBase
         _messageBoxService = App.Services.GetRequiredService<IMessageBoxService>();
         _notificationService = App.Services.GetRequiredService<INotificationService>();
         _settings = App.Services.GetRequiredService<Core.Settings.Settings>();
+        _ = LoadInstalledContentAsync();
+    }
+
+    private async Task LoadInstalledContentAsync()
+    {
+        try
+        {
+            HeaderFile? titleUpdate = await Task.Run(FindLatestTitleUpdate);
+            await Dispatcher.UIThread.InvokeAsync(() =>
+            {
+                HasInstalledTitleUpdate = titleUpdate != null;
+                InstalledTitleUpdate = titleUpdate == null
+                    ? string.Empty
+                    : FormatTitleUpdate(titleUpdate);
+            });
+        }
+        catch (Exception ex)
+        {
+            Logger.Warning<GameItemViewModel>($"Failed to load installed content for {Game.Title}: {ex.Message}");
+        }
+    }
+
+    private HeaderFile? FindLatestTitleUpdate()
+    {
+        List<AccountContent> accountContents = BuildAccountContents();
+
+        return accountContents
+            .OfType<GameContent>()
+            .SelectMany(content => content.InstallerHeaderFiles)
+            .Where(header => header.ContentType == ContentType.TitleUpdates)
+            .OrderByDescending(header => header.HasVersion)
+            .ThenByDescending(header => header.Version)
+            .ThenByDescending(header => header.FileName, StringComparer.OrdinalIgnoreCase)
+            .FirstOrDefault();
+    }
+
+    private static string FormatTitleUpdate(HeaderFile titleUpdate)
+    {
+        string name = string.IsNullOrWhiteSpace(titleUpdate.DisplayName)
+            ? titleUpdate.FileName
+            : titleUpdate.DisplayName;
+
+        return titleUpdate.HasVersion ? $"{name} (v{titleUpdate.Version})" : name;
     }
 
     [RelayCommand]

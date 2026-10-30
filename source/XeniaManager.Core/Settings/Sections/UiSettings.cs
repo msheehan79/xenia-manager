@@ -184,6 +184,12 @@ public class UiSettings
                 /// </summary>
                 [JsonPropertyName("show_media_id")]
                 public bool ShowMediaId { get; set; } = false;
+
+                /// <summary>
+                /// Show installed content column
+                /// </summary>
+                [JsonPropertyName("show_installed_content")]
+                public bool ShowInstalledContent { get; set; } = false;
             }
 
             /// <summary>

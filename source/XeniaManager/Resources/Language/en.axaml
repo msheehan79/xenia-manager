@@ -49,6 +49,7 @@
     <sys:String x:Key="LibraryPage.Options.EditListView.Icon.Header">Game Icon</sys:String>
     <sys:String x:Key="LibraryPage.Options.EditListView.TitleId.Header">Title ID</sys:String>
     <sys:String x:Key="LibraryPage.Options.EditListView.MediaId.Header">Media ID</sys:String>
+    <sys:String x:Key="LibraryPage.Options.EditListView.InstalledContent.Header">Latest Title Update</sys:String>
     <sys:String x:Key="LibraryPage.Options.DoubleClickLaunch.Header">Launch on Double-Click</sys:String>
     <sys:String x:Key="LibraryPage.Options.DoubleClickLaunch.ToolTip">Toggle between single and double-click to launch games</sys:String>
     <sys:String x:Key="LibraryPage.Options.ScanDirectory.Header">Scan Directory</sys:String>

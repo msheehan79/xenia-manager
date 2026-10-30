@@ -286,6 +286,15 @@
                                     <icons:SymbolIcon Symbol="Bookmark" />
                                 </MenuItem.Icon>
                             </MenuItem>
+                            <!-- Installed Content -->
+                            <MenuItem Header="{DynamicResource LibraryPage.Options.EditListView.InstalledContent.Header}"
+                                      Command="{Binding ToggleListInstalledContentCommand}"
+                                      ToggleType="CheckBox"
+                                      IsChecked="{Binding ShowListInstalledContent}">
+                                <MenuItem.Icon>
+                                    <icons:SymbolIcon Symbol="ContentView" />
+                                </MenuItem.Icon>
+                            </MenuItem>
                         </MenuItem>
                         <Separator />
                         <!-- Export Shortcuts -->
@@ -1232,10 +1241,37 @@
 
                                     <!-- Title -->
                                     <TextBlock Text="{Binding Title}"
+                                               MinWidth="300"
                                                FontWeight="SemiBold"
                                                FontSize="14"
                                                VerticalAlignment="Center"
                                                TextTrimming="CharacterEllipsis" />
+
+                                    <!-- Latest Title Update -->
+                                    <StackPanel Orientation="Horizontal"
+                                                Spacing="4"
+                                                VerticalAlignment="Center"
+                                                IsVisible="{Binding DataContext.ShowListInstalledContent, ElementName=Root}">
+                                        <icons:SymbolIcon Symbol="ArrowSyncCircle"
+                                                          FontSize="16"
+                                                          VerticalAlignment="Center"
+                                                          Foreground="{DynamicResource TextFillColorSecondaryBrush}"
+                                                          IsVisible="{Binding HasInstalledTitleUpdate}">
+                                            <ToolTip.Tip>
+                                                <TextBlock Text="{DynamicResource LibraryPage.Options.EditListView.InstalledContent.Header}" />
+                                            </ToolTip.Tip>
+                                        </icons:SymbolIcon>
+                                        <TextBlock Text="{Binding InstalledTitleUpdate}"
+                                                   MaxWidth="360"
+                                                   FontSize="12"
+                                                   VerticalAlignment="Center"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   Foreground="{DynamicResource TextFillColorSecondaryBrush}">
+                                            <ToolTip.Tip>
+                                                <TextBlock Text="{Binding InstalledTitleUpdate}" />
+                                            </ToolTip.Tip>
+                                        </TextBlock>
+                                    </StackPanel>
                                 </StackPanel>
 
                                 <!-- Right: Extra columns -->
@@ -1267,6 +1303,7 @@
                                             <TextBlock Text="{Binding Game.XeniaVersion, Converter={StaticResource XeniaVersionToStringConverter}}" />
                                         </ToolTip.Tip>
                                     </icons:SymbolIcon>
+
                                 </StackPanel>
                             </Grid>
                         </Border>
